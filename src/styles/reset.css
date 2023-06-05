@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Consolas;
+  overflow: hidden;
+}
+
+*::-webkit-inner-spin-button,
+*::-webkit-outer-spin-button {
+    appearance: none;
+}
