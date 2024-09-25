@@ -4,67 +4,83 @@ import './styles/base.css'
 import { VscLinkExternal, VscArrowSwap } from 'react-icons/vsc'
 import { toRoman, fromRoman } from 'toroman'
 
-function App() {
-  const [swapped, setSwapped] = useState(false)
+export function App() {
+    const [isSwapped, setIsSwapped] = useState(false);
 
-  // ? Permite apenas letras numerais romanas
-  function handleRomanLetter(e) {
-    switch (e.keyCode) {
-      case 73: // I
-        break
-      case 86: // V
-        break
-      case 88: // X
-        break
-      case 76: // L
-        break
-      case 67: // C
-        break
-      case 68: // D
-        break
-      case 77: // M
-        break
-      case 8: // Backspace
-        break
-      default:
-        e.preventDefault()
+    const [arabicValue, setArabicValue] = useState(0);
+    const [romanValue, setRomanValue] = useState('');
+
+    const swap = () => setIsSwapped(prevState => !prevState);
+
+    const handleKeyDown = (e) => {
+        // I, V, X, L, C, D, M, Backspace
+        const allowedKeyCodes = [73, 86, 88, 76, 67, 68, 77, 8];
+
+        if (allowedKeyCodes.includes(e.keyCode))
+            return;
+
+        e.preventDefault();
     }
-  }
 
-  function update(e) {
-    switch(e.target.type) {
-      case 'number':
-        document.getElementById('roman').value = toRoman(parseInt(e.target.value))
-        if(e.target.value == '') {
-          document.getElementById('roman').value = ''
+    const updateArabicValue = (value) => {
+        if (!value) {
+            setArabicValue(0);
+
+            return;
         }
-        break
-      case 'text':
-        document.getElementById('arabic').value = fromRoman(e.target.value.toString().toUpperCase())
-        if(e.target.value == '') {
-          document.getElementById('arabic').value = ''
-        }
-        break
+
+        setArabicValue(fromRoman(value.toString().toUpperCase()));
     }
-  }
 
-  return (
-    <main>
-      <h1>Conversor Romano</h1>
-      <a href="https://www.linkedin.com/in/matheusgesser/" target='_blank' rel='noreferrer'>
-        <h2>Matheus Gesser <VscLinkExternal /></h2>
-      </a>
-      <span>
-        <strong>{swapped ? 'Romano' : 'Árabe'}</strong>
-        <VscArrowSwap className={swapped ? 'swap' : ''} onClick={() => setSwapped(!swapped)} />
-        <strong>{swapped ? 'Árabe' : 'Romano'}</strong>
-      </span>
-      <section className={swapped ? 'container swap' : 'container'}>
-        <input type='number' id='arabic' onChange={update}></input>
-        <input type='text' id='roman' onChange={update} onKeyDown={handleRomanLetter}></input>
-      </section>
-    </main>
-  )
+    const updateRomanValue = (value) => {
+        if (!value) {
+            setRomanValue('');
+
+            return;
+        }
+
+        setRomanValue(toRoman(parseInt(value)));
+    }
+
+    const handleChange = (e) => {
+        console.log(e);
+
+        if (e.target.id === 'arabic') {
+            setArabicValue(e.target.value);
+
+            updateRomanValue(e.target.value);
+        }
+
+        if (e.target.id === 'roman') {
+            setRomanValue(e.target.value);
+
+            updateArabicValue(e.target.value);
+        }
+
+        throw new Error("The input id MUST either be 'arabic' or 'roman' and not ${e.target.id}");
+    };
+
+    return (
+        <main>
+            <h1>Conversor Romano</h1>
+
+            <a href="https://www.linkedin.com/in/matheusgesser/" target='_blank' rel='noreferrer'>
+                <h2>Matheus Gesser <VscLinkExternal /></h2>
+            </a>
+
+            <span>
+                <strong>{isSwapped ? 'Romano' : 'Árabe'}</strong>
+
+                <VscArrowSwap className={isSwapped ? 'swap' : undefined} onClick={swap} />
+
+                <strong>{isSwapped ? 'Árabe' : 'Romano'}</strong>
+            </span>
+
+            <section className={isSwapped ? 'container swap' : 'container'}>
+                <input type='number' id='arabic' value={arabicValue} onChange={handleChange}></input>
+
+                <input type='text' id='roman' value={romanValue} onChange={handleChange} onKeyDown={handleKeyDown}></input>
+            </section>
+        </main>
+    )
 }
-
-export default App

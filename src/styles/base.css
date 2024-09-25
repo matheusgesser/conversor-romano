@@ -4,7 +4,7 @@
   justify-content: center;
   min-height: 100vh;
   background: #111;
-  color: #fff
+  color: #fff;
 }
 
 main {
@@ -79,13 +79,16 @@ input {
   span strong {
     font-size: 1rem;
   }
+
   section.container {
     flex-direction: column;
     gap: 2rem;
   }
+
   section.container.swap {
     flex-direction: column-reverse;
   }
+
   input {
     width: 90dvw;
   }
